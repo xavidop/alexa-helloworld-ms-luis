@@ -1,0 +1,23 @@
+{
+  "name": "hello-world",
+  "version": "1.1.0",
+  "description": "alexa utility for quickly building skills",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Amazon Alexa",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/cognitiveservices-luis-runtime": "^5.0.0",
+    "@azure/ms-rest-azure-js": "^2.1.0",
+    "ask-sdk-core": "^2.6.0",
+    "ask-sdk-express-adapter": "^2.10.2",
+    "ask-sdk-model": "^1.18.0",
+    "aws-sdk": "^2.326.0",
+    "botbuilder-ai": "^4.12.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
