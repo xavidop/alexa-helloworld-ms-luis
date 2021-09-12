@@ -1,6 +1,6 @@
 # Integrating Alexa with Microsoft LUIS
 
-Alexa has a very good Natural Language Processing engine, However, there another NLP in the market that can be used and those are including more and more capabilities.
+Alexa has a very good Natural Language Processing engine, However, there are other NLP engines in the market that can be used and those are including more and more capabilities.
 
 <!-- TOC -->
 
@@ -26,7 +26,7 @@ Here you have the technologies used in this project
 
 ## Preface
 
-Alexa's NLP covers 99% of the most common user's use cases and we can create powerful Alexa Skills using its engine. However, it is a fact that MS LUIS, as NLP engine, has evolved a lot and there we can find lot of functionalities that we cannot find within Alexa such its [Prebuilt Domains](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/howto-add-prebuilt-models) or its prebuilt entities, subentities and [Regular expression entities](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-how-to-add-entities).
+Alexa's NLP covers 99% of the most common user's use cases and we can create powerful Alexa Skills using its engine. However, it is a fact that MS LUIS, as NLP engine, has evolved a lot and there we can find lot of functionalities that we cannot find within Alexa such as its [Prebuilt Domains](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/howto-add-prebuilt-models) or its prebuilt entities, subentities and [Regular expression entities](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-how-to-add-entities).
 
 
 ## Setting up our Alexa Skill
