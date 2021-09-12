@@ -7,9 +7,10 @@ const { ExpressAdapter } = require('ask-sdk-express-adapter');
 require('dotenv').config({path: '.env'})
 const { CognitiveServicesCredentials } = require("@azure/ms-rest-azure-js");
 const { LUISRuntimeClient } = require("@azure/cognitiveservices-luis-runtime");
+const { intentDispatcher } = require('./util');
  
-let authoringKey = process.env["luis-authoring-key"];
-const creds = new CognitiveServicesCredentials(authoringKey);
+let subscriptionKey = process.env["subscription-key"];
+const creds = new CognitiveServicesCredentials(subscriptionKey);
  
 // check the following link to find your region
 // https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-reference-regions
@@ -17,10 +18,9 @@ const region = process.env["region"];
 const client = new LUISRuntimeClient(creds, process.env["endpoint"]);
  
 const appId = process.env["app-id"]; // replace this with your appId.
-const versionId = "0.1"; // replace with version of your luis application. Initial value will be 0.1
  
 const predictionRequest = {
-    query: "I want a burger",
+    query: "",
     options: {
       datetimeReference: new Date(),
       preferExternalEntities: true
@@ -33,16 +33,32 @@ const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
-    async handle(handlerInput) {
-        const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
-        var result = await client.prediction.getSlotPrediction(appId, 'Staging', predictionRequest, { verbose: verbose, showAllIntents: showAllIntents });
-
+    handle(handlerInput) {
+        const speakOutput = 'Welcome to MS LUIS - Alexa Integration!!';
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
             .getResponse();
     }
 };
+
+const OrderIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'OrderIntent';
+    },
+    async handle(handlerInput) {
+        predictionRequest.query = Alexa.getSlotValueV2(handlerInput.requestEnvelope, 'luisquery').value;
+
+        var result = await client.prediction.getSlotPrediction(appId, 'Staging', predictionRequest, { verbose: verbose, showAllIntents: showAllIntents });
+        var speak = intentDispatcher(result.prediction.topIntent, result.prediction.entities)
+        return handlerInput.responseBuilder
+            .speak(speak)
+            .reprompt(speak)
+            .getResponse();
+    }
+};
+
 const HelloWorldIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -133,11 +149,31 @@ const ErrorHandler = {
 // The SkillBuilder acts as the entry point for your skill, routing all request and response
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
-const app = express();
-const skillBuilder = Alexa.SkillBuilders.custom()
+if (process.env["env"] == 'local') {
+        const app = express();
+        const skillBuilder = Alexa.SkillBuilders.custom()
+            .addRequestHandlers(
+                LaunchRequestHandler,
+                HelloWorldIntentHandler,
+                OrderIntentHandler,
+                HelpIntentHandler,
+                CancelAndStopIntentHandler,
+                SessionEndedRequestHandler,
+                IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+            )
+            .addErrorHandlers(
+                ErrorHandler,
+            );
+        const skill = skillBuilder.create();
+        const adapter = new ExpressAdapter(skill, false, false);
+        app.post('/', adapter.getRequestHandlers());
+        app.listen(3000);
+}else{
+    exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         HelloWorldIntentHandler,
+        OrderIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
@@ -145,8 +181,6 @@ const skillBuilder = Alexa.SkillBuilders.custom()
     )
     .addErrorHandlers(
         ErrorHandler,
-    );
-const skill = skillBuilder.create();
-const adapter = new ExpressAdapter(skill, false, false);
-app.post('/', adapter.getRequestHandlers());
-app.listen(3000);
+    )
+    .lambda();
+}

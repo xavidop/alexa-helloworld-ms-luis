@@ -17,3 +17,22 @@ module.exports.getS3PreSignedUrl = function getS3PreSignedUrl(s3ObjectKey) {
     return s3PreSignedUrl;
 
 }
+
+module.exports.intentDispatcher = function intentDispatcher(intent, entities) {
+    var result = '';
+    switch (intent) {
+        case 'PizzaIntent':
+            result = `Okay, I will give you ${entities['number']} Pizzas`
+            break;
+        case 'BurgerIntent':
+            result = `Okay, I will give you ${entities['number']} Burgers`
+            break;
+    
+        default:
+            result = 'Sorry I  didn\'t catch you'
+            break;
+    }
+
+    return result;
+
+}

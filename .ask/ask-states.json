@@ -2,7 +2,10 @@
   "askcliStatesVersion": "2020-03-31",
   "profiles": {
     "default": {
-      "skillId": "amzn1.ask.skill.f04c5f5d-de65-4aa1-a68f-26802b134744"
+      "skillId": "amzn1.ask.skill.f04c5f5d-de65-4aa1-a68f-26802b134744",
+      "skillMetadata": {
+        "eTag": "e1c309c851050aff658b2783da39b803"
+      }
     }
   }
 }

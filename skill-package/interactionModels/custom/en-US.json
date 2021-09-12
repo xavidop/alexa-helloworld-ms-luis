@@ -31,10 +31,22 @@
         {
           "name": "AMAZON.NavigateHomeIntent",
           "samples": []
+        },
+        {
+          "name": "OrderIntent",
+          "slots": [
+            {
+              "name": "luisquery",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "I want {luisquery}"
+          ]
         }
       ],
       "types": []
     }
   },
-  "version": "1"
+  "version": "4"
 }
