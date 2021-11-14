@@ -241,6 +241,14 @@
       ]
     },
     {
+      "pathElement": "_dependencies",
+      "children": [
+        {
+          "pathElement": "^([A-z0-9-_+\\.\\/]+\\/)*([A-z0-9-_+\\.]+\\.(?i)[A-z]+)$"
+        }
+      ]
+    },
+    {
       "pathElement": "conversations",
       "children": [
         {

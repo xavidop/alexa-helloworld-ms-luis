@@ -48,9 +48,15 @@ const OrderIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'OrderIntent';
     },
     async handle(handlerInput) {
+        // Get the AMAZON.SearchQuery Slot Value from Alexa
         predictionRequest.query = Alexa.getSlotValueV2(handlerInput.requestEnvelope, 'luisquery').value;
+        
+        // Send that Value directly to MS LUIS
+        var result = await client.prediction.getSlotPrediction(appId, 
+                                                                'Staging', 
+                                                                predictionRequest, 
+                                                                { verbose: verbose, showAllIntents: showAllIntents });
 
-        var result = await client.prediction.getSlotPrediction(appId, 'Staging', predictionRequest, { verbose: verbose, showAllIntents: showAllIntents });
         var speak = intentDispatcher(result.prediction.topIntent, result.prediction.entities)
         return handlerInput.responseBuilder
             .speak(speak)
